@@ -1,0 +1,39 @@
+{
+  "name": "github-follow-manager",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./src/entry.ts",
+  "scripts": {
+    "compile": "tsc --target es2019 --module nodenext --resolveJsonModule main.ts --noEmitOnError",
+    "start": "tsc && node ./build/main",
+    "clean": "rm build/*.js build/tests/*.js build/*.ts build/tests/*.ts build/*.json build/tests/*.json",
+    "lint-fix": "npx eslint src/*.ts --fix",
+    "gen-docs": "npx typedoc src/entry.ts --out ./docs --exclude main.ts *dev.ts --name github-follow-manager"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrdcvlsc/github-follow-manager.git"
+  },
+  "keywords": [
+    "manage-following", "manage-followers",
+    "github-follower", "github-following", 
+    "github", "api", "github-api",
+    "github-rest-api", "github-rest",
+    "interface", "cli", "library"
+  ],
+  "author": "mrdcvlsc",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/core": "^4.0.5",
+    "@octokit/request-error": "^3.0.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1",
+    "typedoc": "^0.23.14"
+  }
+}
