@@ -18,9 +18,11 @@ export type block_response_t =
 export type unblock_response_t =
   Endpoints["DELETE /user/blocks/{username}"]["response"];
 
-export type actions_method_response_t = 
-  Promise<follow_response_t> | Promise<unfollow_response_t> |
-  Promise<block_response_t> | Promise<unblock_response_t>;
+export type actions_method_response_t =
+  | Promise<follow_response_t>
+  | Promise<unfollow_response_t>
+  | Promise<block_response_t>
+  | Promise<unblock_response_t>;
 
 export type actions_method_t = (
   octokit: Octokit,
@@ -103,7 +105,7 @@ export class Actions {
    * @param options.retryAfter **optional** delay in **seconds** after hitting the
    * **secondary rate limit** before performing another request (**default `60`**).
    */
-   public static async block(
+  public static async block(
     octokit: Octokit,
     user: string,
     options: actions_option_t = {}
@@ -130,7 +132,7 @@ export class Actions {
    * @param options.retryAfter **optional** delay in **seconds** after hitting the
    * **secondary rate limit** before performing another request (**default `60`**).
    */
-   public static async unblock(
+  public static async unblock(
     octokit: Octokit,
     user: string,
     options: actions_option_t = {}
