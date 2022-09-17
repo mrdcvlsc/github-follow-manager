@@ -11,7 +11,7 @@ properties.
 - [Instantiating the Octokit class](#instantiating-the-octokit-class)
 - [class User](#class-user)
 - [class Actions](#class-actions)
-- [class ListUsers](#class-listusers)
+- [class List](#class-listusers)
 - [class Lookup](#class-lookup)
 - [class Recipe](#class-recipe)
 
@@ -100,6 +100,15 @@ This class is pretty straight forward, it contains two
     ```js
     await Actions.unfollow(octokit, 'userToUnfollow')
     ```
+3. Method to block a user.
+    ```js
+    await Actions.block(octokit, 'userToBlock')
+    ```
+4. Method to unblock a user.
+    ```js
+    await Actions.unblock(octokit, 'userToUnblock')
+    ```
+
 **Optional Parameters**
     
 We can pass an **options object**, containing options
@@ -122,32 +131,34 @@ await Actions.follow(octokit, 'userToFollow', {
 
 <br>
 
-## **class `ListUsers`**
+## **class `List`**
 
 ```js
-import { ListUsers } from 'entry.ts'
+import { List } from 'entry.ts'
 ```
 This class retrieves a page list of users, it contains three 
 **element methods**:
 
-1. Get **followers** or **following** of the authenticated user.
+1. Get **followers** or **following** of the authenticated user, parameter `target: 'followers' | 'following'` type.
 
     ```js
-    const response = await ListUsers.getAuth(octokit, 'followers')
+    const response = await List.authUser(octokit, 'followers')
     const followers = response.data
     ```
 
-2. Get **followers** or **following** of a given user.
+2. Get **followers** or **following** of a given user, parameter `target: 'followers' | 'following'` type.
     ```js
-    const response = await ListUsers.get(octokit, 'another-user', 'following')
+    const response = await List.get(octokit, 'another-user', 'following')
     const following = response.data
     ```
 
-3. Get **stargazers** of a repository.
+3. Get **stargazers** of a repository, parameter `target: 'stargazers' | 'subscribers'` type.
     ```js
-    const response = await ListUsers.getStargazers(octokit, 'owner', 'repo')
+    const response = await List.repo(octokit, 'owner', 'repo', 'stargazers')
     const stargazers = response.data
     ```
+
+    Note: `subscribers` are the users that watches the repo.
 
 **Optional Parameters**
     
@@ -169,7 +180,7 @@ the _secondary rate limit_ before performing another request.
 **Example use:**
 
 ```js
-const response = await ListUsers.getStargazers(octokit, 'owner', 'repo', {
+const response = await List.repo(octokit, 'owner', 'repo', 'stargazers', {
     page: 7,
     per_page: 45
 })
@@ -191,27 +202,27 @@ method** and **two element methods**:
 
 1. The **`Lookup.createSet`** method is a **compound method**
 that Creates a Set that contains the usernames of the accounts
-retrieved from any `ListUsers` method.
+retrieved from any `List` method.
 
     **Example:**
 
     ```js
     const LookupUserList = await Lookup.createSet(
-        ListUsers.get, [octokit, 'owner', 'repo']
+        List.get, [octokit, 'owner', 'repo']
     )
     ```
 
-    **First parameter** - Any methods in the `ListUsers` 
+    **First parameter** - Any methods in the `List` 
     class.
 
     **Second parameter** - An array that contains the
-    original arguments of the chosen `ListUsers` method in
+    original arguments of the chosen `List` method in
     the first argument but excludes the **options object 
     parameter**.
 
     **Third parameter** - the **options object** in this
     method has the same shape with the options object of the
-    methods in `ListUsers` class.
+    methods in `List` class.
 
 2. The method **`Lookup.Found`** will perform the given
 `Actions` method when a user is found.
@@ -238,11 +249,11 @@ This class is purely composed of **compound methods**:
     this is the action we want to perform for each user, 
     `follow` or `unfollow`.
 
-    - **Second parameter** - Any methods in `ListUsers` class,
-    all users that will be returned by the `ListUsers` method will be either `followed` or `unfollowed` base on the first parameter.
+    - **Second parameter** - Any methods in `List` class,
+    all users that will be returned by the `List` method will be either `followed` or `unfollowed` base on the first parameter.
 
     - **Third parameter** - An array containing the original
-    arguments of the chosen `ListUsers` method at the _second 
+    arguments of the chosen `List` method at the _second 
     parameter_.
 
     - **Fourth parameter** - An **options object**.
@@ -251,7 +262,7 @@ This class is purely composed of **compound methods**:
     followers** we do something like this.
 
     ```js
-    Recipe.perform(Actions.follow, ListUsers.getAuth, [octokit, 'followers'])
+    Recipe.perform(Actions.follow, List.authUser, [octokit, 'followers'])
     ```
 
 2. The **`Recipe.performWithAssert`** method.
@@ -264,10 +275,10 @@ This class is purely composed of **compound methods**:
 
     - **Third parameter** - Any methods in `Actions` class.
 
-    - **Fourth parameter** - Any methods in `ListUsers` class.
+    - **Fourth parameter** - Any methods in `List` class.
 
     - **Fifth parameter** - An array containing the original
-    arguments of the chosen `ListUsers` method at the _Fourth 
+    arguments of the chosen `List` method at the _Fourth 
     parameter_.
 
     - **Sixth parameter** - An **options object**.
@@ -279,16 +290,16 @@ This class is purely composed of **compound methods**:
 
     ```js
     const userlookup = await Lookup.createSet(
-        ListUsers.getStargazers,
-        [octokit, 'friendUser', 'followers']
+        List.user,
+        [octokit, 'anotherAccount', 'followers']
     )
 
     await Recipe(
         userlookup,
         Lookup.Found,
         Actions.follow,
-        ListUsers.getStargazers,
-        [octokit, 'owner', 'repo']
+        List.repo,
+        [octokit, 'owner', 'repo', 'stargazers']
     )
     ```
 
