@@ -57,7 +57,7 @@ async function test() {
   // test asserts - add tests here
   
   test_name.push('empty test');
-  results.push(await ASSERT_ALWAYS_PASS()); // there is no tests yet
+  results.push(await ASSERT_ALWAYS_FAIL()); // there is no tests yet
 
   // EDIT ZONE : END ^
   // ##############################################################################################
