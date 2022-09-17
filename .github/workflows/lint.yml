@@ -1,0 +1,23 @@
+name: lint
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  run-lint:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: build with clean install
+      run: npm ci
+
+    - name: run lint
+      run: npm run lint
