@@ -16,8 +16,7 @@ A package you can use to manage your GitHub followers and followings.
 ```
 
 ### **Example**
-
-Use with `fastify-session`'s `store` property.
+wip
 
 ```ts
 // work in progress
